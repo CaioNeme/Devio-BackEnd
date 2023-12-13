@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProductType {
+  BURGUER
+  DRINK
+  DESSERT
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  name        String      @db.VarChar(50)
+  description String      @db.VarChar(255)
+  price       Int
+  productType ProductType
+  discount    Int         @default(0)
+  isAvaiable  Boolean     @default(true)
+  selledTimes Int         @default(0)
+  image       String?
+  itens       Item[]
+
+  @@map("products")
+}
+
+model Extra {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  name        String      @db.VarChar(50)
+  description String      @db.VarChar(255)
+  price       Int
+  productType ProductType
+  discount    Int         @default(0)
+  isAvaiable  Boolean     @default(true)
+  image       String?
+  itens       Item[]
+
+  @@map("extras")
+}
+
+enum OrderStatus {
+  PROCESSING
+  READY
+  DELIVERED
+  CANCELED
+}
+
+enum PaidWith {
+  CREDITCARD
+  DEBITCARD
+  CASH
+  PIX
+}
+
+model Order {
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  clientName    String      @db.VarChar(50)
+  discount      Int         @default(0)
+  orderStatus   OrderStatus @default(PROCESSING)
+  paymentMethod PaidWith
+  itens         Item[]
+
+  @@map("orders")
+}
+
+model Item {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  note      String?  @db.VarChar(255)
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int      @default(1)
+  extras    Extra[]
+  paidPrice Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+
+  @@map("itens")
+}
