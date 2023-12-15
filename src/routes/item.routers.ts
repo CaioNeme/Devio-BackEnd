@@ -1,6 +1,6 @@
 import { cancelItem, concludeItem, createItem, getAllItems, getItemById } from '@/controllers/item.controller';
 import { validateBody } from '@/middlewares/validationSchema';
-import { createItemSchema } from '@/schema/item.schema';
+import { createItemSchema } from '@/schemas/item.schema';
 import { Router } from 'express';
 
 const itemRouter = Router();

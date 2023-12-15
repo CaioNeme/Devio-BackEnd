@@ -1,6 +1,7 @@
 import { prisma } from '@/config';
 import { Order } from '@prisma/client';
 import { repositoryItem } from './item.repository';
+import { notFoundError } from '@/errors';
 
 async function getAllOrders() {
   const orders = await prisma.order.findMany();
@@ -42,6 +43,10 @@ async function createOrder(order: Order) {
 
   const itensPromises = order.itensId.map(async (itemId) => {
     const item = await repositoryItem.getItemById(itemId);
+
+    if (!item) {
+      throw notFoundError('Item not found or not available');
+    }
 
     delete item.createdAt;
     delete item.updatedAt;
