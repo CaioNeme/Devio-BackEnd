@@ -1,7 +1,19 @@
 module.exports = {
-  semi: true,
-  trailingComma: "all",
-  singleQuote: true,
-  printWidth: 120,
-  tabWidth: 2,
+  root: true,
+  '*': {
+    charset: 'utf-8',
+    endOfLine: 'lf',
+    insertFinalNewline: true,
+    indentStyle: 'space',
+    trimTrailingWhitespace: true,
+  },
+  '*.md': {
+    trimTrailingWhitespace: false,
+  },
+  '*.{tsx,jsx,ts,js}': {
+    indentSize: 2,
+  },
+  '*.php': {
+    indentSize: 4,
+  },
 };

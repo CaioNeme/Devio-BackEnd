@@ -1,5 +1,5 @@
-import { prisma } from '@/config';
 import { Item } from '@prisma/client';
+import { prisma } from '@/config';
 
 async function createItem(item: Item) {
   const res = await prisma.item.create({
@@ -19,6 +19,7 @@ async function getItemById(id: number) {
       id,
     },
   });
+
   return item;
 }
 

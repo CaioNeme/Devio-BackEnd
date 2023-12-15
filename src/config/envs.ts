@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
 export function loadEnv() {
@@ -9,6 +9,6 @@ export function loadEnv() {
         ? '.env.development'
         : '.env';
 
-  const currentEnvs = dotenv.config({ path });
+  const currentEnvs = config({ path });
   dotenvExpand.expand(currentEnvs);
 }

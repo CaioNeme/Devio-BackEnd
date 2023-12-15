@@ -1,13 +1,13 @@
-import { prisma } from '@/config';
 import { Order } from '@prisma/client';
 import { repositoryItem } from './item.repository';
+import { prisma } from '@/config';
 import { notFoundError } from '@/errors';
 
 async function getAllOrders() {
   const orders = await prisma.order.findMany();
 
-  const ordersWithItensPromises = orders.map(async (order) => {
-    const itensPromises = order.itensId.map(async (itemId) => {
+  const ordersWithItensPromises = orders.map(async order => {
+    const itensPromises = order.itensId.map(async itemId => {
       const item = await repositoryItem.getItemById(itemId);
       delete item.createdAt;
       delete item.updatedAt;
@@ -41,7 +41,7 @@ async function createOrder(order: Order) {
   delete res.createdAt;
   delete res.updatedAt;
 
-  const itensPromises = order.itensId.map(async (itemId) => {
+  const itensPromises = order.itensId.map(async itemId => {
     const item = await repositoryItem.getItemById(itemId);
 
     if (!item) {
@@ -50,6 +50,17 @@ async function createOrder(order: Order) {
 
     delete item.createdAt;
     delete item.updatedAt;
+
+    await prisma.product.update({
+      where: {
+        id: item.productId,
+      },
+      data: {
+        soldTimes: {
+          increment: 1,
+        },
+      },
+    });
 
     return item;
   });
@@ -92,7 +103,11 @@ async function getOrderById(id: number) {
     },
   });
 
-  const itensPromises = order.itensId.map(async (itemId) => {
+  if (!order) {
+    throw notFoundError('Order not found or not available');
+  }
+
+  const itensPromises = order.itensId.map(async itemId => {
     const item = await repositoryItem.getItemById(itemId);
 
     delete item.createdAt;

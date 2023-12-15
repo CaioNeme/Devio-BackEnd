@@ -1,7 +1,6 @@
+import { Order } from '@prisma/client';
 import { badRequest } from '@/errors';
 import { repositoryOrder } from '@/repositories/order.repository';
-import { Order } from '@prisma/client';
-import { servicesItem } from './item.service';
 
 async function getAllOrders() {
   const orders = await repositoryOrder.getAllOrders();

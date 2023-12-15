@@ -1,18 +1,17 @@
+import { Item } from '@prisma/client';
+import { servicesExtra } from './extra.service';
 import { badRequest, notFoundError } from '@/errors';
 import { repositoryItem } from '@/repositories/item.repository';
-import { Item } from '@prisma/client';
+import { repositoryProduct } from '@/repositories/product.repository';
 
 async function createItem(item: Item) {
-  const product = await repositoryItem.getItemById(item.productId);
+  const product = await repositoryProduct.getProductById(item.productId);
   if (!product) {
-    throw badRequest('Product not found or not available');
+    throw notFoundError('Product not found or not available');
   }
 
   if (item.extraId) {
-    const extra = await repositoryItem.getItemById(item.extraId);
-    if (!extra) {
-      throw badRequest('Extra not found or not available');
-    }
+    await servicesExtra.getExtraById(item.extraId);
   }
 
   const res = await repositoryItem.createItem(item);
