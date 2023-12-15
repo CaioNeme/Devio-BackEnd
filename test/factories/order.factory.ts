@@ -15,3 +15,7 @@ export async function createOrder(isExtra: boolean = false) {
 
   return { order, item };
 }
+
+export async function getOrder(id: number) {
+  return prisma.order.findUnique({ where: { id } });
+}

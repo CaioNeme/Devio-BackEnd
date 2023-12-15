@@ -103,6 +103,10 @@ async function getOrderById(id: number) {
     },
   });
 
+  if (!order) {
+    throw notFoundError('Order not found or not available');
+  }
+
   const itensPromises = order.itensId.map(async (itemId) => {
     const item = await repositoryItem.getItemById(itemId);
 
