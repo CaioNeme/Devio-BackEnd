@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, { Express, json } from 'express';
 import 'express-async-errors';
 import cors from 'cors';
 import { handleApplicationErrors } from '@/middlewares/';
@@ -9,7 +9,7 @@ loadEnv();
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(json());
 app.use(router);
 app.use(handleApplicationErrors);
 

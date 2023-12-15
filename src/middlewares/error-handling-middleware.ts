@@ -2,12 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import { ApplicationError, RequestError } from '@/protocols';
 
+/* eslint-disable */
 export function handleApplicationErrors(
   err: RequestError | ApplicationError | Error,
   _req: Request,
   res: Response,
   next: NextFunction,
 ) {
+  /* eslint-enable */
+
   if (err.name === 'NotFoundError') {
     return res.status(httpStatus.NOT_FOUND).send({
       message: err.message,

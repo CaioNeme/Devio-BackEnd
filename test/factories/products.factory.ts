@@ -1,5 +1,5 @@
-import { prisma } from '@/config';
 import { faker } from '@faker-js/faker';
+import { prisma } from '@/config';
 
 export async function createProduct() {
   const product = await prisma.product.create({

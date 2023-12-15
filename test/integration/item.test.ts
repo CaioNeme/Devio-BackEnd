@@ -44,7 +44,7 @@ describe('GET /items', () => {
     ]);
   });
   it('should respond with status 200 and an array of items with extra', async () => {
-    const { item, extra } = await createItem(true);
+    const { item } = await createItem(true);
     const response = await sever.get('/item');
     expect(response.status).toBe(200);
     expect(response.body).toEqual([
@@ -104,7 +104,9 @@ describe('POST /item', () => {
     const response = await sever.post('/item').send(item);
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ message: 'Invalid data: "productId" is required ' });
+    expect(response.body).toEqual({
+      message: 'Invalid data: "productId" is required ',
+    });
   });
   it('should respond with status 400 when item is invalid', async () => {
     const item = {
@@ -115,7 +117,9 @@ describe('POST /item', () => {
     const response = await sever.post('/item').send(item);
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ message: 'Invalid data: "productId" is required ' });
+    expect(response.body).toEqual({
+      message: 'Invalid data: "productId" is required ',
+    });
   });
   it('should respond with status 404 when product not found', async () => {
     const item = {
@@ -127,7 +131,9 @@ describe('POST /item', () => {
     const response = await sever.post('/item').send(item);
 
     expect(response.status).toBe(404);
-    expect(response.body).toEqual({ message: 'Product not found or not available' });
+    expect(response.body).toEqual({
+      message: 'Product not found or not available',
+    });
   });
   it('should respond with status 404 when extra not found', async () => {
     const product = await createProduct();
@@ -141,7 +147,9 @@ describe('POST /item', () => {
     const response = await sever.post('/item').send(item);
 
     expect(response.status).toBe(404);
-    expect(response.body).toEqual({ message: 'Extra not found or not available' });
+    expect(response.body).toEqual({
+      message: 'Extra not found or not available',
+    });
   });
 });
 
