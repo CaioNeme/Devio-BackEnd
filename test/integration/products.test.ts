@@ -27,6 +27,18 @@ describe('GET /products', () => {
     const product = await createProduct();
     const response = await sever.get('/products');
     expect(response.status).toBe(200);
-    expect(response.body).toEqual([product]);
+    expect(response.body).toEqual([
+      {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        image: product.image,
+        productType: product.productType,
+        soldTimes: product.soldTimes,
+        price: product.price,
+        createdAt: product.createdAt.toISOString(),
+        updatedAt: product.updatedAt.toISOString(),
+      },
+    ]);
   });
 });

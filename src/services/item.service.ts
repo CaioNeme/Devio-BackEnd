@@ -7,7 +7,7 @@ import { servicesExtra } from './extra.service';
 async function createItem(item: Item) {
   const product = await repositoryProduct.getProductById(item.productId);
   if (!product) {
-    throw badRequest('Product not found or not available');
+    throw notFoundError('Product not found or not available');
   }
 
   if (item.extraId) {
