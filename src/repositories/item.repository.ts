@@ -19,6 +19,7 @@ async function getItemById(id: number) {
       id,
     },
   });
+
   return item;
 }
 

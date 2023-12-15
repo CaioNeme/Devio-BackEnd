@@ -51,6 +51,17 @@ async function createOrder(order: Order) {
     delete item.createdAt;
     delete item.updatedAt;
 
+    await prisma.product.update({
+      where: {
+        id: item.productId,
+      },
+      data: {
+        soldTimes: {
+          increment: 1,
+        },
+      },
+    });
+
     return item;
   });
   const itens = await Promise.all(itensPromises);
