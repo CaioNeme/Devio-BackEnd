@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
+import { prisma } from '@/config';
 import { createProduct } from './products.factory';
 import { createExtra } from './extras.factory';
-import { prisma } from '@/config';
 
 export async function createItem(isExtra: boolean = false) {
   const product = await createProduct();

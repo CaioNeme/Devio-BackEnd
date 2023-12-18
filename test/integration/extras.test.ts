@@ -1,7 +1,7 @@
 import supertest from 'supertest';
-import { dbClean } from '../helpers';
-import app, { init, close } from '../../src/app';
+import app, { close, init } from '../../src/app';
 import { createExtra } from '../factories/extras.factory';
+import { dbClean } from '../helpers';
 
 const sever = supertest(app);
 
@@ -29,6 +29,17 @@ describe('GET /extras', () => {
     const response = await sever.get('/extras');
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual([extra]);
+    expect(response.body).toEqual([
+      {
+        id: extra.id,
+        name: extra.name,
+        description: extra.description,
+        price: extra.price,
+        productType: extra.productType,
+        image: extra.image,
+        createdAt: extra.createdAt.toISOString(),
+        updatedAt: extra.updatedAt.toISOString(),
+      },
+    ]);
   });
 });

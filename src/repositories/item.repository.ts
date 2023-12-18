@@ -1,9 +1,16 @@
-import { Item } from '@prisma/client';
 import { prisma } from '@/config';
+import { servicesProduct } from '@/services/product.service';
+import { Item } from '@prisma/client';
 
 async function createItem(item: Item) {
+  const product = await servicesProduct.getProductById(item.productId);
+
   const res = await prisma.item.create({
-    data: item,
+    data: {
+      ...item,
+      productImage: product.image,
+      productName: product.name,
+    },
   });
   return res;
 }

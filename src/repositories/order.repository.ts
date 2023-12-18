@@ -1,13 +1,17 @@
-import { Order } from '@prisma/client';
-import { repositoryItem } from './item.repository';
 import { prisma } from '@/config';
 import { notFoundError } from '@/errors';
+import { Order } from '@prisma/client';
+import { repositoryItem } from './item.repository';
 
+/* eslint-disable */
 async function getAllOrders() {
-  const orders = await prisma.order.findMany();
-
-  const ordersWithItensPromises = orders.map(async order => {
-    const itensPromises = order.itensId.map(async itemId => {
+  const orders = await prisma.order.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
+  const ordersWithItensPromises = orders.map(async (order) => {
+    const itensPromises = order.itensId.map(async (itemId) => {
       const item = await repositoryItem.getItemById(itemId);
       delete item.createdAt;
       delete item.updatedAt;
@@ -31,6 +35,7 @@ async function getAllOrders() {
 
   return ordersWithItens;
 }
+/* eslint-enable */
 
 async function createOrder(order: Order) {
   const res = await prisma.order.create({

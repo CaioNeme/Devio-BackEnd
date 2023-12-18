@@ -1,14 +1,13 @@
+import { invalidDataError } from '@/errors';
 import { NextFunction, Request, Response } from 'express';
 import { ObjectSchema } from 'joi';
-import { invalidDataError } from '@/errors';
 /* eslint-disable */
 
 export function validateBody<T>(schema: ObjectSchema<T>): ValidationMiddleware {
-  return validateSchema(schema, 'body');
+  return validateSchema(schema, "body");
 }
-/* eslint-enable */
 
-function validateSchema(schema: ObjectSchema, type: 'body') {
+function validateSchema(schema: ObjectSchema, type: "body") {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req[type], {
       abortEarly: false,
@@ -17,8 +16,8 @@ function validateSchema(schema: ObjectSchema, type: 'body') {
     if (!error) {
       next();
     } else {
-      let errorMessage = '';
-      error.details.forEach(d => (errorMessage += d.message + ' '));
+      let errorMessage = "";
+      error.details.forEach((d) => (errorMessage += `${d.message} `));
       throw invalidDataError(errorMessage);
     }
   };

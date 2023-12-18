@@ -3,11 +3,6 @@ import { prisma } from '@/config';
 async function getAllExtras() {
   const extras = await prisma.extra.findMany();
 
-  for (const extra of extras) {
-    delete extra.createdAt;
-    delete extra.updatedAt;
-  }
-
   return extras;
 }
 

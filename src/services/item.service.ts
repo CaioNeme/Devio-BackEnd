@@ -1,8 +1,8 @@
 import { Item } from '@prisma/client';
-import { servicesExtra } from './extra.service';
 import { badRequest, notFoundError } from '@/errors';
 import { repositoryItem } from '@/repositories/item.repository';
 import { repositoryProduct } from '@/repositories/product.repository';
+import { servicesExtra } from './extra.service';
 
 async function createItem(item: Item) {
   const product = await repositoryProduct.getProductById(item.productId);

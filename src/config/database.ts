@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-
+/* eslint-disable */
 export let prisma: PrismaClient;
 export function connectDb(): void {
   prisma = new PrismaClient();
