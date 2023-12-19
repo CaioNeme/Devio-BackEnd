@@ -18,7 +18,17 @@ async function getProductById(id: number) {
   return product;
 }
 
+async function getProductByName(name: string) {
+  const product = await prisma.product.findUnique({
+    where: {
+      name,
+    },
+  });
+  return product;
+}
+
 export const repositoryProduct = {
   getAllProducts,
   getProductById,
+  getProductByName,
 };

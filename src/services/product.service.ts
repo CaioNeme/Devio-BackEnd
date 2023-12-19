@@ -16,7 +16,14 @@ async function getProductById(id: number) {
   return product;
 }
 
+async function getProductByName(name: string) {
+  const product = await repositoryProduct.getProductByName(name);
+
+  return product;
+}
+
 export const servicesProduct = {
+  getProductByName,
   getAllProducts,
   getProductById,
 };
