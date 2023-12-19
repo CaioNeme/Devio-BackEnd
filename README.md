@@ -1,8 +1,18 @@
 # Desafio Técnico - Devio-BackEnd
 
 ### Deploy
+##
 
-<a href="">Clique Aqui!</a>
+<a href="https://devio-front-end-ochre.vercel.app/">Deploy FrontEnd!</a>
+
+<a href="https://www.youtube.com/watch?v=U4NBCmdfA6E">Video Demo FrontEnd!</a>
+
+
+<a href="https://fastfooddevioapi.onrender.com">Deploy BackEnd!</a>
+
+<a href="https://www.youtube.com/watch?v=S-5DNV5WMIU">Video Demo BackEnd!</a>
+
+##
 
 ###### o server pode estar em stand by dependendo do horario
 
