@@ -8,7 +8,7 @@
     "precommit": "lint-staged",
     "build": "tsc -p tsconfig.build.json && tsc-alias",
     "prepare": "husky install",
-    "start": "npm run migration:generate && npm run migration:run && node dist/server.js",
+    "start": "npm run migration:generate && npm run migration:run && npm run seed && node dist/server.js",
     "migration:run": "prisma migrate deploy",
     "migration:generate": "npm run dev:load-envs prisma migrate dev",
     "lint": "eslint .",
