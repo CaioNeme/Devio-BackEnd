@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
 import { prisma } from '@/config';
-import { createProduct } from './products.factory';
+import { faker } from '@faker-js/faker';
 import { createExtra } from './extras.factory';
+import { createProduct } from './products.factory';
 
 export async function createItem(isExtra: boolean = false) {
   const product = await createProduct();
@@ -13,6 +13,8 @@ export async function createItem(isExtra: boolean = false) {
       quantity: faker.number.int({ min: 1, max: 10 }),
       paidPrice: faker.number.int({ min: 100, max: 1000 }),
       productId: product.id,
+      productImage: product.image,
+      productName: product.name,
       extraId: isExtra ? extra.id : null,
     },
   });

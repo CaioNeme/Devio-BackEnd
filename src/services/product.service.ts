@@ -19,6 +19,10 @@ async function getProductById(id: number) {
 async function getProductByName(name: string) {
   const product = await repositoryProduct.getProductByName(name);
 
+  if (!product) {
+    throw notFoundError('Product not found or not available');
+  }
+
   return product;
 }
 

@@ -1,8 +1,8 @@
 import supertest from 'supertest';
-import { dbClean } from '../helpers';
-import app, { init, close } from '../../src/app';
+import app, { close, init } from '../../src/app';
 import { createItem } from '../factories/item.factory';
 import { createOrder, getOrder } from '../factories/order.factory';
+import { dbClean } from '../helpers';
 
 const sever = supertest(app);
 
@@ -45,6 +45,8 @@ describe('GET /orders', () => {
               quantity: item.quantity,
               paidPrice: item.paidPrice,
               productId: item.productId,
+              productImage: item.productImage,
+              productName: item.productName,
               extraId: item.extraId,
               status: item.status,
             },
@@ -79,6 +81,8 @@ describe('POST /orders', () => {
           quantity: item.quantity,
           paidPrice: item.paidPrice,
           productId: item.productId,
+          productImage: item.productImage,
+          productName: item.productName,
           extraId: item.extraId,
           status: item.status,
         },
@@ -127,6 +131,20 @@ describe('POST /orders', () => {
       message: 'Item not found or not available',
     });
   });
+  it('should respond with status 404 when order itens is invalid', async () => {
+    const { item } = await createItem();
+    const order = {
+      clientName: 'clientName',
+      paymentMethod: 'CREDIT',
+      itensId: [item.id, 1],
+    };
+    const response = await sever.post('/orders').send(order);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      message: 'Item not found or not available',
+    });
+  });
 });
 
 describe('GET /orders/:id', () => {
@@ -148,6 +166,8 @@ describe('GET /orders/:id', () => {
           quantity: item.quantity,
           paidPrice: item.paidPrice,
           productId: item.productId,
+          productImage: item.productImage,
+          productName: item.productName,
           extraId: item.extraId,
           status: item.status,
         },
@@ -188,6 +208,15 @@ describe('Cancel /orders/:id', () => {
       message: 'Order not found or not available',
     });
   });
+  it('should respond with status 400 when order a ready cancel', async () => {
+    const { order } = await createOrder();
+    await sever.put(`/orders/cancel/${order.id}`);
+    const response = await sever.put(`/orders/cancel/${order.id}`);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'Order already canceled',
+    });
+  });
 });
 
 describe('Conclude /orders/:id', () => {
@@ -212,6 +241,24 @@ describe('Conclude /orders/:id', () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
       message: 'Order not found or not available',
+    });
+  });
+  it('should respond with status 400 when order a ready cancel', async () => {
+    const { order } = await createOrder();
+    await sever.put(`/orders/cancel/${order.id}`);
+    const response = await sever.put(`/orders/conclude/${order.id}`);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'Order already canceled',
+    });
+  });
+  it('should respond with status 400 when order a ready conclude', async () => {
+    const { order } = await createOrder();
+    await sever.put(`/orders/conclude/${order.id}`);
+    const response = await sever.put(`/orders/conclude/${order.id}`);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'Order already ready',
     });
   });
 });

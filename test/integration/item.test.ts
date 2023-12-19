@@ -1,9 +1,9 @@
 import supertest from 'supertest';
-import { dbClean } from '../helpers';
-import app, { init, close } from '../../src/app';
+import app, { close, init } from '../../src/app';
+import { createExtra } from '../factories/extras.factory';
 import { createItem, getItem } from '../factories/item.factory';
 import { createProduct } from '../factories/products.factory';
-import { createExtra } from '../factories/extras.factory';
+import { dbClean } from '../helpers';
 
 const sever = supertest(app);
 
@@ -38,6 +38,8 @@ describe('GET /items', () => {
         productId: item.productId,
         extraId: item.extraId,
         status: item.status,
+        productImage: item.productImage,
+        productName: item.productName,
         createdAt: item.createdAt.toISOString(),
         updatedAt: item.updatedAt.toISOString(),
       },
@@ -56,6 +58,8 @@ describe('GET /items', () => {
         productId: item.productId,
         extraId: item.extraId,
         status: item.status,
+        productImage: item.productImage,
+        productName: item.productName,
         createdAt: item.createdAt.toISOString(),
         updatedAt: item.updatedAt.toISOString(),
       },
@@ -167,6 +171,8 @@ describe('GET /item/:id', () => {
       productId: item.productId,
       extraId: item.extraId,
       status: item.status,
+      productImage: item.productImage,
+      productName: item.productName,
       createdAt: item.createdAt.toISOString(),
       updatedAt: item.updatedAt.toISOString(),
     });
@@ -195,15 +201,30 @@ describe('Cancel /item/:id', () => {
       productId: item.productId,
       extraId: item.extraId,
       status: 'CANCELED',
+      productImage: item.productImage,
+      productName: item.productName,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     });
   });
   it('should respond with status 404 when item not found', async () => {
     const response = await sever.put('/item/cancel/1');
-
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ message: 'Item not found' });
+  });
+  it('should respond with status 400 when order a ready conclude', async () => {
+    const { item } = await createItem();
+    await sever.put(`/item/conclude/${item.id}`);
+    const response = await sever.put(`/item/cancel/${item.id}`);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Item already done' });
+  });
+  it('should respond with status 400 when order a ready cancel', async () => {
+    const { item } = await createItem();
+    await sever.put(`/item/cancel/${item.id}`);
+    const response = await sever.put(`/item/cancel/${item.id}`);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Item already canceled' });
   });
 });
 
@@ -211,7 +232,6 @@ describe('Conclude /item/:id', () => {
   it('should respond with status 200 and an item', async () => {
     const { item } = await createItem();
     const response = await sever.put(`/item/conclude/${item.id}`);
-
     const updatedItem = await getItem(item.id);
 
     expect(response.status).toBe(200);
@@ -223,6 +243,8 @@ describe('Conclude /item/:id', () => {
       productId: item.productId,
       extraId: item.extraId,
       status: 'DONE',
+      productImage: item.productImage,
+      productName: item.productName,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     });
@@ -232,5 +254,19 @@ describe('Conclude /item/:id', () => {
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ message: 'Item not found' });
+  });
+  it('should respond with status 400 when order a ready conclude', async () => {
+    const { item } = await createItem();
+    await sever.put(`/item/conclude/${item.id}`);
+    const response = await sever.put(`/item/conclude/${item.id}`);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Item already done' });
+  });
+  it('should respond with status 400 when order a ready cancel', async () => {
+    const { item } = await createItem();
+    await sever.put(`/item/cancel/${item.id}`);
+    const response = await sever.put(`/item/conclude/${item.id}`);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Item already canceled' });
   });
 });

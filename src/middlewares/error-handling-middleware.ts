@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import httpStatus from 'http-status';
 import { ApplicationError, RequestError } from '@/protocols';
+import { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
 
 /* eslint-disable */
 export function handleApplicationErrors(
@@ -25,18 +25,6 @@ export function handleApplicationErrors(
 
   if (err.name === 'InvalidDataError') {
     return res.status(httpStatus.BAD_REQUEST).send({
-      message: err.message,
-    });
-  }
-
-  if (err.name === 'UnauthorizedError') {
-    return res.status(httpStatus.UNAUTHORIZED).send({
-      message: err.message,
-    });
-  }
-
-  if (err.name === 'ConflictError') {
-    return res.status(httpStatus.CONFLICT).send({
       message: err.message,
     });
   }

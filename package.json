@@ -13,7 +13,7 @@
     "migration:generate": "npm run dev:load-envs prisma migrate dev",
     "lint": "eslint .",
     "test": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand",
-    "test:coverage": "npm run test:load-envs -- jest -- --coverage --runInBand",
+    "test:coverage": "cross-env NODE_ENV=test jest --passWithNoTests --coverage --runInBand",
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "test:load-envs": "dotenv -e .env.test",
     "dev:load-envs": "dotenv -e .env.development",

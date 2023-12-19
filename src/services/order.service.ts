@@ -8,9 +8,6 @@ async function getAllOrders() {
 }
 
 async function createOrder(order: Order) {
-  if (order.itensId.length === 0) {
-    throw badRequest('Itens not found or not available');
-  }
   const res = await repositoryOrder.createOrder(order);
   return res;
 }
@@ -38,9 +35,6 @@ async function concludeOrder(id: number) {
 
 async function getOrderById(id: number) {
   const order = await repositoryOrder.getOrderById(id);
-  if (!order) {
-    throw badRequest('Order not found or not available');
-  }
 
   return order;
 }
