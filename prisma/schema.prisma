@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProductType {
+  BURGUER
+  DRINK
+  DESSERT
+}
+
+enum OrderStatus {
+  PROCESSING
+  READY
+  CANCELED
+}
+
+enum ItemStatus {
+  TODO
+  DONE
+  CANCELED
+}
+
+enum PaidWith {
+  CREDIT
+  DEBIT
+  CASH
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(50) @unique
+  description String      @db.VarChar(255)
+  price       Int
+  productType ProductType
+  soldTimes   Int         @default(0)
+  image       String?     @db.VarChar
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Item        Item[]
+}
+
+model Extra {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(50)
+  description String      @db.VarChar(255)
+  price       Int
+  productType ProductType
+  image       String?     @db.VarChar
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now())
+  Item        Item[]
+}
+
+model Order {
+  id            Int         @id @default(autoincrement())
+  clientName    String      @db.VarChar(50)
+  orderStatus   OrderStatus @default(PROCESSING)
+  paymentMethod PaidWith
+  itensId       Int[]       @db.Integer
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Item {
+  id           Int        @id @default(autoincrement())
+  note         String?    @db.VarChar(255)
+  quantity     Int        @default(1)
+  paidPrice    Int
+  status       ItemStatus @default(TODO)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+  productId    Int        @db.Integer
+  Product      Product    @relation(fields: [productId], references: [id])
+  productImage String?    @db.VarChar
+  productName  String?    @db.VarChar
+  extraId      Int?
+  Extra        Extra?     @relation(fields: [extraId], references: [id])
+}
